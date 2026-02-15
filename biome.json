@@ -72,6 +72,11 @@
       "includes": ["src/components/ui/**"],
       "linter": { "enabled": false },
       "assist": { "enabled": false }
+    },
+    {
+      "includes": ["src/components/ai-elements/**"],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false }
     }
   ]
 }
