@@ -7,19 +7,20 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "dist",
-      ".wrangler",
-      ".vercel",
-      ".netlify",
-      ".output",
-      "build",
-      "routeTree.gen.ts",
-      ".tanstack",
-      "drizzle",
-      ".drizzle",
-      "bun.lock",
-      "node_modules"
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!!**/.wrangler",
+      "!!**/.vercel",
+      "!!**/.netlify",
+      "!!**/.output",
+      "!!**/build",
+      "!!**/routeTree.gen.ts",
+      "!!**/.tanstack",
+      "!!**/drizzle",
+      "!!**/.drizzle",
+      "!!**/bun.lock",
+      "!!**/node_modules"
     ]
   },
   "formatter": {
@@ -53,6 +54,11 @@
       "arrowParentheses": "always"
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "assist": {
     "enabled": true,
     "actions": {
@@ -60,5 +66,12 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/ui/**"],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false }
+    }
+  ]
 }
