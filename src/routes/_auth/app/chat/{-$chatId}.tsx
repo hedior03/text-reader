@@ -1,8 +1,6 @@
-import { useChat } from "@ai-sdk/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { DefaultChatTransport } from "ai";
 import { ChatInterface } from "@/components/chat/chat-interface";
-import { generateChatId } from "@/lib/ai/id";
+import { useChatSession } from "@/hooks/use-chat-session";
 
 export const Route = createFileRoute("/_auth/app/chat/{-$chatId}")({
   component: ChatPage,
@@ -10,13 +8,7 @@ export const Route = createFileRoute("/_auth/app/chat/{-$chatId}")({
 
 function ChatPage() {
   const { chatId } = Route.useParams();
-
-  const { messages, status, sendMessage } = useChat({
-    id: chatId ?? generateChatId(),
-    transport: new DefaultChatTransport({
-      api: "/api/ai/chat",
-    }),
-  });
+  const { messages, status, sendMessage } = useChatSession(chatId);
 
   return <ChatInterface messages={messages} sendMessage={sendMessage} status={status} />;
 }
