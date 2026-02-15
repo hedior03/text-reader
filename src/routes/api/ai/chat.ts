@@ -73,29 +73,39 @@ export const Route = createFileRoute("/api/ai/chat")({
         const result = streamText({
           model: groqProvider("openai/gpt-oss-120b"),
           messages: modelMessages,
+          providerOptions: {
+            groq: {
+              reasoningEffort: "medium",
+            },
+          },
         });
 
         return result.toUIMessageStreamResponse({
           originalMessages: uiMessages,
+          generateMessageId,
           onFinish: async ({ responseMessage }) => {
-            const assistantMessageId = responseMessage.id ?? generateMessageId();
+            try {
+              const assistantMessageId = responseMessage.id || generateMessageId();
 
-            await db.insert(message).values({
-              id: assistantMessageId,
-              conversationId,
-              role: "assistant",
-            });
+              await db.insert(message).values({
+                id: assistantMessageId,
+                conversationId,
+                role: "assistant",
+              });
 
-            if (responseMessage.parts) {
-              await db.insert(part).values(
-                responseMessage.parts.map((p, idx) => ({
-                  id: `${assistantMessageId}-part-${idx}`,
-                  messageId: assistantMessageId,
-                  conversationId,
-                  type: p.type,
-                  content: JSON.stringify(p),
-                })),
-              );
+              if (responseMessage.parts) {
+                await db.insert(part).values(
+                  responseMessage.parts.map((p, idx) => ({
+                    id: `${assistantMessageId}-part-${idx}`,
+                    messageId: assistantMessageId,
+                    conversationId,
+                    type: p.type,
+                    content: JSON.stringify(p),
+                  })),
+                );
+              }
+            } catch (error) {
+              console.error("Failed to persist assistant message:", error);
             }
           },
         });
