@@ -18,8 +18,8 @@ import { Route as AuthAppRouteRouteImport } from './routes/_auth/app/route'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
-import { Route as AuthAppChar43chatRouteRouteImport } from './routes/_auth/app/+chat/route'
-import { Route as AuthAppChar43chatChar123ChatIdChar125RouteImport } from './routes/_auth/app/+chat/{-$chatId}'
+import { Route as AuthAppChatRouteRouteImport } from './routes/_auth/app/chat/route'
+import { Route as AuthAppChatChar123ChatIdChar125RouteImport } from './routes/_auth/app/chat/{-$chatId}'
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: '/_guest',
@@ -64,16 +64,16 @@ const ApiAiChatRoute = ApiAiChatRouteImport.update({
   path: '/api/ai/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthAppChar43chatRouteRoute = AuthAppChar43chatRouteRouteImport.update({
-  id: '/+chat',
-  path: '/+chat',
+const AuthAppChatRouteRoute = AuthAppChatRouteRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => AuthAppRouteRoute,
 } as any)
-const AuthAppChar43chatChar123ChatIdChar125Route =
-  AuthAppChar43chatChar123ChatIdChar125RouteImport.update({
+const AuthAppChatChar123ChatIdChar125Route =
+  AuthAppChatChar123ChatIdChar125RouteImport.update({
     id: '/{-$chatId}',
     path: '/{-$chatId}',
-    getParentRoute: () => AuthAppChar43chatRouteRoute,
+    getParentRoute: () => AuthAppChatRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -81,21 +81,21 @@ export interface FileRoutesByFullPath {
   '/app': typeof AuthAppRouteRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
-  '/app/+chat': typeof AuthAppChar43chatRouteRouteWithChildren
+  '/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/': typeof AuthAppIndexRoute
-  '/app/+chat/{-$chatId}': typeof AuthAppChar43chatChar123ChatIdChar125Route
+  '/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
-  '/app/+chat': typeof AuthAppChar43chatRouteRouteWithChildren
+  '/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
-  '/app/+chat/{-$chatId}': typeof AuthAppChar43chatChar123ChatIdChar125Route
+  '/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,11 +105,11 @@ export interface FileRoutesById {
   '/_auth/app': typeof AuthAppRouteRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/signup': typeof GuestSignupRoute
-  '/_auth/app/+chat': typeof AuthAppChar43chatRouteRouteWithChildren
+  '/_auth/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
-  '/_auth/app/+chat/{-$chatId}': typeof AuthAppChar43chatChar123ChatIdChar125Route
+  '/_auth/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -118,21 +118,21 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/signup'
-    | '/app/+chat'
+    | '/app/chat'
     | '/api/ai/chat'
     | '/api/auth/$'
     | '/app/'
-    | '/app/+chat/{-$chatId}'
+    | '/app/chat/{-$chatId}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
-    | '/app/+chat'
+    | '/app/chat'
     | '/api/ai/chat'
     | '/api/auth/$'
     | '/app'
-    | '/app/+chat/{-$chatId}'
+    | '/app/chat/{-$chatId}'
   id:
     | '__root__'
     | '/'
@@ -141,11 +141,11 @@ export interface FileRouteTypes {
     | '/_auth/app'
     | '/_guest/login'
     | '/_guest/signup'
-    | '/_auth/app/+chat'
+    | '/_auth/app/chat'
     | '/api/ai/chat'
     | '/api/auth/$'
     | '/_auth/app/'
-    | '/_auth/app/+chat/{-$chatId}'
+    | '/_auth/app/chat/{-$chatId}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -221,45 +221,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/app/+chat': {
-      id: '/_auth/app/+chat'
-      path: '/+chat'
-      fullPath: '/app/+chat'
-      preLoaderRoute: typeof AuthAppChar43chatRouteRouteImport
+    '/_auth/app/chat': {
+      id: '/_auth/app/chat'
+      path: '/chat'
+      fullPath: '/app/chat'
+      preLoaderRoute: typeof AuthAppChatRouteRouteImport
       parentRoute: typeof AuthAppRouteRoute
     }
-    '/_auth/app/+chat/{-$chatId}': {
-      id: '/_auth/app/+chat/{-$chatId}'
+    '/_auth/app/chat/{-$chatId}': {
+      id: '/_auth/app/chat/{-$chatId}'
       path: '/{-$chatId}'
-      fullPath: '/app/+chat/{-$chatId}'
-      preLoaderRoute: typeof AuthAppChar43chatChar123ChatIdChar125RouteImport
-      parentRoute: typeof AuthAppChar43chatRouteRoute
+      fullPath: '/app/chat/{-$chatId}'
+      preLoaderRoute: typeof AuthAppChatChar123ChatIdChar125RouteImport
+      parentRoute: typeof AuthAppChatRouteRoute
     }
   }
 }
 
-interface AuthAppChar43chatRouteRouteChildren {
-  AuthAppChar43chatChar123ChatIdChar125Route: typeof AuthAppChar43chatChar123ChatIdChar125Route
+interface AuthAppChatRouteRouteChildren {
+  AuthAppChatChar123ChatIdChar125Route: typeof AuthAppChatChar123ChatIdChar125Route
 }
 
-const AuthAppChar43chatRouteRouteChildren: AuthAppChar43chatRouteRouteChildren =
-  {
-    AuthAppChar43chatChar123ChatIdChar125Route:
-      AuthAppChar43chatChar123ChatIdChar125Route,
-  }
+const AuthAppChatRouteRouteChildren: AuthAppChatRouteRouteChildren = {
+  AuthAppChatChar123ChatIdChar125Route: AuthAppChatChar123ChatIdChar125Route,
+}
 
-const AuthAppChar43chatRouteRouteWithChildren =
-  AuthAppChar43chatRouteRoute._addFileChildren(
-    AuthAppChar43chatRouteRouteChildren,
-  )
+const AuthAppChatRouteRouteWithChildren =
+  AuthAppChatRouteRoute._addFileChildren(AuthAppChatRouteRouteChildren)
 
 interface AuthAppRouteRouteChildren {
-  AuthAppChar43chatRouteRoute: typeof AuthAppChar43chatRouteRouteWithChildren
+  AuthAppChatRouteRoute: typeof AuthAppChatRouteRouteWithChildren
   AuthAppIndexRoute: typeof AuthAppIndexRoute
 }
 
 const AuthAppRouteRouteChildren: AuthAppRouteRouteChildren = {
-  AuthAppChar43chatRouteRoute: AuthAppChar43chatRouteRouteWithChildren,
+  AuthAppChatRouteRoute: AuthAppChatRouteRouteWithChildren,
   AuthAppIndexRoute: AuthAppIndexRoute,
 }
 

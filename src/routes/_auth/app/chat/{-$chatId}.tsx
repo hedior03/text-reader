@@ -4,7 +4,7 @@ import type { TextUIPart, UIMessage } from "ai";
 import { useState } from "react";
 import { generateChatId } from "@/lib/ai/id";
 
-export const Route = createFileRoute("/_auth/app/+chat/{-$chatId}")({
+export const Route = createFileRoute("/_auth/app/chat/{-$chatId}")({
   component: ChatPage,
 });
 
@@ -24,7 +24,7 @@ function ChatPage() {
   };
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex flex-1 min-h-0 max-w-3xl flex-col">
       <div className="flex-1 space-y-4 overflow-y-auto p-4">
         {messages.length === 0 ? (
           <p className="text-muted-foreground text-center">No messages yet</p>

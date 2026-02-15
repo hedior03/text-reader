@@ -5,5 +5,9 @@ export const Route = createFileRoute("/_auth/app")({
 });
 
 function AppLayout() {
-  return <Outlet />;
+  return (
+    <div className="flex min-h-svh flex-col">
+      <Outlet />
+    </div>
+  );
 }
