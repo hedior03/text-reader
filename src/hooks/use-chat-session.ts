@@ -32,6 +32,9 @@ export function useChatSession(chatId?: string, initialMessages: UIMessage[] = [
         messages,
       );
 
+      // Invalidate conversations list to show new/updated conversation in sidebar
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+
       // Redirect to the conversation URL for new chats
       if (isNewChat.current) {
         isNewChat.current = false;
