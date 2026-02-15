@@ -1,6 +1,6 @@
 import { createGroq } from "@ai-sdk/groq";
 import { createFileRoute } from "@tanstack/react-router";
-import { streamText } from "ai";
+import { convertToModelMessages, streamText, validateUIMessages } from "ai";
 import { env } from "@/env/server";
 
 const groqProvider = createGroq({
@@ -14,9 +14,12 @@ export const Route = createFileRoute("/api/ai/chat")({
         const body = await request.json();
         const { messages } = body;
 
+        const validated = await validateUIMessages({ messages });
+        const modelMessages = await convertToModelMessages(validated);
+
         const result = streamText({
           model: groqProvider("openai/gpt-oss-120b"),
-          messages,
+          messages: modelMessages,
         });
 
         return result.toUIMessageStreamResponse();
