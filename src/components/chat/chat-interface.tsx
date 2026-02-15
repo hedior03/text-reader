@@ -48,7 +48,7 @@ export function ChatInterface({ messages, sendMessage, status }: ChatInterfacePr
   return (
     <div className="flex flex-1 min-h-0 flex-col">
       <Conversation>
-        <ConversationContent>
+        <ConversationContent className="mx-auto w-full max-w-4xl">
           {messages.length === 0 ? (
             <ConversationEmptyState
               icon={<MessageSquareIcon className="size-12" />}
