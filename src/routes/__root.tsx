@@ -65,7 +65,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="min-h-screen bg-sidebar antialiased h-full">
         <ThemeProvider>
           {children}
           <Toaster richColors />

@@ -64,11 +64,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={conv.id}>
                     <SidebarMenuButton
                       render={
-                        <Link
-                          to="/app/chat/{-$chatId}"
-                          // biome-ignore lint/suspicious/noExplicitAny: TanStack Router types not regenerated yet
-                          params={{ chatId: conv.id } as any}
-                        />
+                        <Link to="/app/chat/{-$chatId}" params={{ chatId: conv.id }} />
                       }
                       isActive={currentChatId === conv.id}
                     >
