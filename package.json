@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.24",
+    "@ai-sdk/openai": "^3.0.29",
     "@ai-sdk/react": "^3.0.88",
     "@base-ui/react": "^1.2.0",
     "@radix-ui/react-use-controllable-state": "^1.2.2",

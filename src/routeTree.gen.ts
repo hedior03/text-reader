@@ -17,8 +17,10 @@ import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as AuthAppRouteRouteImport } from './routes/_auth/app/route'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiAiSpeechRouteImport } from './routes/api/ai/speech'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
 import { Route as AuthAppChatRouteRouteImport } from './routes/_auth/app/chat/route'
+import { Route as AuthAppReaderIndexRouteImport } from './routes/_auth/app/reader/index'
 import { Route as AuthAppChatChar123ChatIdChar125RouteImport } from './routes/_auth/app/chat/{-$chatId}'
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
@@ -59,6 +61,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAiSpeechRoute = ApiAiSpeechRouteImport.update({
+  id: '/api/ai/speech',
+  path: '/api/ai/speech',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -67,6 +74,11 @@ const ApiAiChatRoute = ApiAiChatRouteImport.update({
 const AuthAppChatRouteRoute = AuthAppChatRouteRouteImport.update({
   id: '/chat',
   path: '/chat',
+  getParentRoute: () => AuthAppRouteRoute,
+} as any)
+const AuthAppReaderIndexRoute = AuthAppReaderIndexRouteImport.update({
+  id: '/reader/',
+  path: '/reader/',
   getParentRoute: () => AuthAppRouteRoute,
 } as any)
 const AuthAppChatChar123ChatIdChar125Route =
@@ -83,9 +95,11 @@ export interface FileRoutesByFullPath {
   '/signup': typeof GuestSignupRoute
   '/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/ai/speech': typeof ApiAiSpeechRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/': typeof AuthAppIndexRoute
   '/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
+  '/app/reader/': typeof AuthAppReaderIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,9 +107,11 @@ export interface FileRoutesByTo {
   '/signup': typeof GuestSignupRoute
   '/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/ai/speech': typeof ApiAiSpeechRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
   '/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
+  '/app/reader': typeof AuthAppReaderIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,9 +123,11 @@ export interface FileRoutesById {
   '/_guest/signup': typeof GuestSignupRoute
   '/_auth/app/chat': typeof AuthAppChatRouteRouteWithChildren
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/ai/speech': typeof ApiAiSpeechRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
   '/_auth/app/chat/{-$chatId}': typeof AuthAppChatChar123ChatIdChar125Route
+  '/_auth/app/reader/': typeof AuthAppReaderIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -120,9 +138,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/chat'
     | '/api/ai/chat'
+    | '/api/ai/speech'
     | '/api/auth/$'
     | '/app/'
     | '/app/chat/{-$chatId}'
+    | '/app/reader/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -130,9 +150,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/chat'
     | '/api/ai/chat'
+    | '/api/ai/speech'
     | '/api/auth/$'
     | '/app'
     | '/app/chat/{-$chatId}'
+    | '/app/reader'
   id:
     | '__root__'
     | '/'
@@ -143,9 +165,11 @@ export interface FileRouteTypes {
     | '/_guest/signup'
     | '/_auth/app/chat'
     | '/api/ai/chat'
+    | '/api/ai/speech'
     | '/api/auth/$'
     | '/_auth/app/'
     | '/_auth/app/chat/{-$chatId}'
+    | '/_auth/app/reader/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -153,6 +177,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   GuestRouteRoute: typeof GuestRouteRouteWithChildren
   ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiAiSpeechRoute: typeof ApiAiSpeechRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -214,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ai/speech': {
+      id: '/api/ai/speech'
+      path: '/api/ai/speech'
+      fullPath: '/api/ai/speech'
+      preLoaderRoute: typeof ApiAiSpeechRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -226,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/app/chat'
       preLoaderRoute: typeof AuthAppChatRouteRouteImport
+      parentRoute: typeof AuthAppRouteRoute
+    }
+    '/_auth/app/reader/': {
+      id: '/_auth/app/reader/'
+      path: '/reader'
+      fullPath: '/app/reader/'
+      preLoaderRoute: typeof AuthAppReaderIndexRouteImport
       parentRoute: typeof AuthAppRouteRoute
     }
     '/_auth/app/chat/{-$chatId}': {
@@ -252,11 +291,13 @@ const AuthAppChatRouteRouteWithChildren =
 interface AuthAppRouteRouteChildren {
   AuthAppChatRouteRoute: typeof AuthAppChatRouteRouteWithChildren
   AuthAppIndexRoute: typeof AuthAppIndexRoute
+  AuthAppReaderIndexRoute: typeof AuthAppReaderIndexRoute
 }
 
 const AuthAppRouteRouteChildren: AuthAppRouteRouteChildren = {
   AuthAppChatRouteRoute: AuthAppChatRouteRouteWithChildren,
   AuthAppIndexRoute: AuthAppIndexRoute,
+  AuthAppReaderIndexRoute: AuthAppReaderIndexRoute,
 }
 
 const AuthAppRouteRouteWithChildren = AuthAppRouteRoute._addFileChildren(
@@ -294,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   GuestRouteRoute: GuestRouteRouteWithChildren,
   ApiAiChatRoute: ApiAiChatRoute,
+  ApiAiSpeechRoute: ApiAiSpeechRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
