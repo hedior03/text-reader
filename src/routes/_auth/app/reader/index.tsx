@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AudioPlayer,
   AudioPlayerControlBar,
@@ -13,6 +13,10 @@ import {
   AudioPlayerTimeRange,
   AudioPlayerVolumeRange,
 } from "@/components/ai-elements/audio-player";
+import {
+  Transcription,
+  TranscriptionSegment,
+} from "@/components/ai-elements/transcription";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -34,6 +38,8 @@ type AudioData = {
   uint8Array: Uint8Array;
 };
 
+type Segment = { text: string; startSecond: number; endSecond: number };
+
 type Voice = "coral" | "sage";
 
 const MAX_TEXT_LENGTH = 10_000;
@@ -43,16 +49,31 @@ function ReaderPage() {
   const [text, setText] = useState("");
   const [voice, setVoice] = useState<Voice>("coral");
   const [audioData, setAudioData] = useState<AudioData | null>(null);
+  const [segments, setSegments] = useState<Segment[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Callback ref: audioEl is null until the <audio> element mounts
+  const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+
   const isTextTooLong = text.length > MAX_TEXT_LENGTH;
   const canGenerate = text.trim().length > 0 && !isTextTooLong && !isLoading;
+
+  // Bridge audio time to state via timeupdate events
+  useEffect(() => {
+    if (!audioEl) return;
+    const handleTimeUpdate = () => setCurrentTime(audioEl.currentTime);
+    audioEl.addEventListener("timeupdate", handleTimeUpdate);
+    return () => audioEl.removeEventListener("timeupdate", handleTimeUpdate);
+  }, [audioEl]);
 
   async function handleGenerate() {
     setIsLoading(true);
     setError(null);
     setAudioData(null);
+    setSegments(null);
+    setCurrentTime(0);
 
     try {
       const res = await fetch("/api/ai/speech", {
@@ -76,6 +97,7 @@ function ReaderPage() {
         ...data.audio,
         uint8Array: Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)),
       });
+      setSegments(data.segments ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -159,21 +181,42 @@ function ReaderPage() {
       )}
 
       {audioData && (
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">Playback</p>
-          <AudioPlayer className="rounded-md border p-2">
-            <AudioPlayerElement data={audioData} />
-            <AudioPlayerControlBar>
-              <AudioPlayerSeekBackwardButton />
-              <AudioPlayerPlayButton />
-              <AudioPlayerSeekForwardButton />
-              <AudioPlayerTimeDisplay />
-              <AudioPlayerTimeRange />
-              <AudioPlayerDurationDisplay />
-              <AudioPlayerMuteButton />
-              <AudioPlayerVolumeRange />
-            </AudioPlayerControlBar>
-          </AudioPlayer>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-medium">Playback</p>
+            <AudioPlayer className="rounded-md border p-2">
+              <AudioPlayerElement ref={setAudioEl} data={audioData} />
+              <AudioPlayerControlBar>
+                <AudioPlayerSeekBackwardButton />
+                <AudioPlayerPlayButton />
+                <AudioPlayerSeekForwardButton />
+                <AudioPlayerTimeDisplay />
+                <AudioPlayerTimeRange />
+                <AudioPlayerDurationDisplay />
+                <AudioPlayerMuteButton />
+                <AudioPlayerVolumeRange />
+              </AudioPlayerControlBar>
+            </AudioPlayer>
+          </div>
+
+          {segments && segments.length > 0 && (
+            <div className="rounded-lg bg-muted/30 p-4">
+              <Transcription
+                segments={segments}
+                currentTime={currentTime}
+                onSeek={(time) => {
+                  if (audioEl) {
+                    audioEl.currentTime = time;
+                  }
+                }}
+                className="text-lg leading-relaxed"
+              >
+                {(segment, index) => (
+                  <TranscriptionSegment key={index} segment={segment} index={index} />
+                )}
+              </Transcription>
+            </div>
+          )}
         </div>
       )}
     </div>
