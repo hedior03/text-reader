@@ -1,4 +1,4 @@
-import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAI, type OpenAITranscriptionModelOptions } from "@ai-sdk/openai";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   experimental_generateSpeech as generateSpeech,
@@ -70,7 +70,7 @@ export const Route = createFileRoute("/api/ai/speech")({
               providerOptions: {
                 openai: {
                   timestampGranularities: ["word"],
-                },
+                } satisfies OpenAITranscriptionModelOptions,
               },
             });
 
