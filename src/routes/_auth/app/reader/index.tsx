@@ -26,6 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { usePersistedState } from "@/hooks/use-persisted-state";
+import { useAuth } from "@/lib/auth/hooks";
 
 export const Route = createFileRoute("/_auth/app/reader/")({
   component: ReaderPage,
@@ -45,9 +47,11 @@ type Voice = "coral" | "sage";
 const MAX_TEXT_LENGTH = 10_000;
 
 function ReaderPage() {
-  const [instructions, setInstructions] = useState("");
-  const [text, setText] = useState("");
-  const [voice, setVoice] = useState<Voice>("coral");
+  const { user } = useAuth();
+  const prefix = `reader:${user?.id ?? "anon"}`;
+  const [instructions, setInstructions] = usePersistedState(`${prefix}:instructions`, "");
+  const [text, setText] = usePersistedState(`${prefix}:text`, "");
+  const [voice, setVoice] = usePersistedState<Voice>(`${prefix}:voice`, "coral");
   const [audioData, setAudioData] = useState<AudioData | null>(null);
   const [segments, setSegments] = useState<Segment[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -147,9 +151,16 @@ function ReaderPage() {
               ? `${text.length.toLocaleString()} / ${MAX_TEXT_LENGTH.toLocaleString()} characters`
               : null}
           </p>
-          {isTextTooLong && (
-            <p className="text-destructive text-xs font-medium">Text is too long</p>
-          )}
+          <div className="flex items-center gap-2">
+            {isTextTooLong && (
+              <p className="text-destructive text-xs font-medium">Text is too long</p>
+            )}
+            {text.length > 0 && (
+              <Button variant="ghost" size="sm" onClick={() => setText("")}>
+                Clear
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
