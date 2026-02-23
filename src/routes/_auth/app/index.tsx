@@ -11,10 +11,15 @@ function AppLandingPage() {
       <div className="flex flex-col items-center gap-8">
         <h1 className="text-3xl font-bold tracking-tight">text-reader</h1>
         <div className="flex gap-4">
-          <Button render={<Link to="/app/chat" />} size="lg">
+          <Button render={<Link to="/app/chat" />} size="lg" nativeButton={false}>
             Chat
           </Button>
-          <Button render={<Link to="/app/reader" />} variant="outline" size="lg">
+          <Button
+            render={<Link to="/app/reader" />}
+            variant="outline"
+            size="lg"
+            nativeButton={false}
+          >
             Read Aloud
           </Button>
         </div>

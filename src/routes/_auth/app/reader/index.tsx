@@ -113,7 +113,12 @@ function ReaderPage() {
     <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Read Aloud</h1>
-        <Button render={<Link to="/app" />} variant="ghost" size="sm">
+        <Button
+          render={<Link to="/app" />}
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+        >
           Back
         </Button>
       </div>
